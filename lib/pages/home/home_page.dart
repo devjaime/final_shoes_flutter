@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping_cart/models/product_model.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -8,6 +9,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<ProductModel> addItems = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,13 +35,10 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 18.0,
             ),
-            CartItem(),
-            CartItem(),
-            CartItem(),
+            _cartItem(),
             SizedBox(
-              height: 4.0,
+              height: 1.0,
             ),
-            Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -105,89 +104,109 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-}
 
-class CartItem extends StatelessWidget {
-  const CartItem({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _cartItem() {
     return Container(
-      color: Colors.white,
-      margin: EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Container(
-            width: 80.0,
-            height: 80.0,
-            decoration: BoxDecoration(
-                color: Colors.green[300],
-                borderRadius: BorderRadius.circular(20.0)),
-            child: Center(
-              child: Container(
-                width: 60.0,
-                height: 60.0,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.scaleDown,
-                        image: NetworkImage(
-                            "https://pngimg.com/uploads/running_shoes/running_shoes_PNG5813.png")),
-                    borderRadius: BorderRadius.circular(20.0)),
-              ),
-            ),
-          ),
-          SizedBox(width: 12.0),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 100.0,
-                  child: Text(
-                    "Nike Air Max Tailwind IV SP",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+      height: 550,
+      child: Expanded(
+        child: GlowingOverscrollIndicator(
+          axisDirection: AxisDirection.down,
+          color: Colors.white,
+          child: ListView.builder(
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  padding:
+                      EdgeInsets.only(top: 0, left: 30, right: 30, bottom: 30),
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(
+                        10,
+                      )),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 100.0,
+                        height: 100.0,
+                        decoration: BoxDecoration(
+                            color: Colors.lightBlue,
+                            borderRadius: BorderRadius.circular(20.0)),
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 4.0),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              child: Padding(
+                                padding: EdgeInsets.all(1.0),
+                                child: Image.asset(
+                                  products[index].path,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 12.0),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 100.0,
+                              child: Text(
+                                "Nike Air Max Tailwind IV SP",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 8.0,
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                    width: 20.0,
+                                    height: 20.0,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(4.0),
+                                        color: Colors.grey[300]),
+                                    child: Icon(Icons.add,
+                                        color: Colors.white, size: 15.0)),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0),
+                                  child: Text("1",
+                                      style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                                Container(
+                                    width: 20.0,
+                                    height: 20.0,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(4.0),
+                                        color: Colors.blue[300]),
+                                    child: Icon(Icons.add,
+                                        color: Colors.white, size: 15.0)),
+                                Spacer(),
+                                Text("\$ 12.000",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
-                ),
-                SizedBox(
-                  height: 8.0,
-                ),
-                Row(
-                  children: [
-                    Container(
-                        width: 20.0,
-                        height: 20.0,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4.0),
-                            color: Colors.grey[300]),
-                        child:
-                            Icon(Icons.add, color: Colors.white, size: 15.0)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Text("1",
-                          style: TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.bold)),
-                    ),
-                    Container(
-                        width: 20.0,
-                        height: 20.0,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4.0),
-                            color: Colors.blue[300]),
-                        child:
-                            Icon(Icons.add, color: Colors.white, size: 15.0)),
-                    Spacer(),
-                    Text("\$ 12.000",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              ],
-            ),
-          )
-        ],
+                );
+              }),
+        ),
       ),
     );
   }
