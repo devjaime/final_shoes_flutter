@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_cart/models/product_model.dart';
+import 'dart:math';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -10,6 +11,23 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<ProductModel> addItems = [];
+  List<double> priceItem = List.filled(products.length, 0); // subtotal
+  List<int> count = List.filled(products.length, 0);
+  double subtotal = 0.0;
+  List colors = [
+    Colors.lightBlue,
+    Colors.green,
+    Colors.yellow,
+    Colors.grey,
+    Colors.amber,
+    Colors.blue,
+    Colors.deepOrange,
+    Colors.deepPurple,
+    Colors.amberAccent,
+    Colors.indigo,
+    Colors.red
+  ];
+  Random random = new Random();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                 ),
                 Text(
-                  "\$ 480.00",
+                  "\$ ${subtotal + 40}",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                 ),
               ],
@@ -77,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "\$ 40.00",
+                  "\$ $subtotal",
                   style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                 ),
               ],
@@ -116,8 +134,12 @@ class _HomePageState extends State<HomePage> {
               itemCount: products.length,
               itemBuilder: (context, index) {
                 return Container(
-                  padding:
-                      EdgeInsets.only(top: 0, left: 30, right: 30, bottom: 30),
+                  padding: EdgeInsets.only(
+                    top: 0,
+                    left: 10,
+                    right: 30,
+                    bottom: 30,
+                  ),
                   margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
                       color: Colors.transparent,
@@ -130,19 +152,25 @@ class _HomePageState extends State<HomePage> {
                         width: 100.0,
                         height: 100.0,
                         decoration: BoxDecoration(
-                            color: Colors.lightBlue,
+                            color: colors[index],
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset:
+                                    Offset(0, 3), // changes position of shadow
+                              ),
+                            ],
                             borderRadius: BorderRadius.circular(20.0)),
                         child: Center(
                           child: Padding(
-                            padding: EdgeInsets.only(left: 4.0),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.transparent,
-                              child: Padding(
-                                padding: EdgeInsets.all(1.0),
-                                child: Image.asset(
-                                  products[index].path,
-                                  fit: BoxFit.cover,
-                                ),
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Padding(
+                              padding: EdgeInsets.all(0.5),
+                              child: Image.asset(
+                                products[index].path,
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
@@ -156,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                             Container(
                               width: 100.0,
                               child: Text(
-                                "Nike Air Max Tailwind IV SP",
+                                products[index].description,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -167,34 +195,58 @@ class _HomePageState extends State<HomePage> {
                             ),
                             Row(
                               children: [
-                                Container(
-                                    width: 20.0,
-                                    height: 20.0,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(4.0),
-                                        color: Colors.grey[300]),
-                                    child: Icon(Icons.add,
-                                        color: Colors.white, size: 15.0)),
+                                GestureDetector(
+                                  onTap: () {
+                                    if (count[index] > 0) {
+                                      count[index] = count[index] - 1;
+                                      priceItem[index] =
+                                          products[index].price * count[index];
+                                      subtotal = priceItem.reduce(
+                                          (value, element) => value + element);
+                                    }
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                      width: 20.0,
+                                      height: 20.0,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(4.0),
+                                          color: count[index] > 0
+                                              ? Colors.red[300]
+                                              : Colors.grey[300]),
+                                      child: Icon(Icons.add,
+                                          color: Colors.white, size: 15.0)),
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10.0),
-                                  child: Text("1",
+                                  child: Text("${count[index]}",
                                       style: TextStyle(
                                           fontSize: 16.0,
                                           fontWeight: FontWeight.bold)),
                                 ),
-                                Container(
-                                    width: 20.0,
-                                    height: 20.0,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(4.0),
-                                        color: Colors.blue[300]),
-                                    child: Icon(Icons.add,
-                                        color: Colors.white, size: 15.0)),
+                                GestureDetector(
+                                  onTap: () {
+                                    count[index] = count[index] + 1;
+                                    priceItem[index] =
+                                        products[index].price * count[index];
+                                    subtotal = priceItem.reduce(
+                                        (value, element) => value + element);
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                      width: 20.0,
+                                      height: 20.0,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(4.0),
+                                          color: Colors.blue[300]),
+                                      child: Icon(Icons.add,
+                                          color: Colors.white, size: 15.0)),
+                                ),
                                 Spacer(),
-                                Text("\$ 12.000",
+                                Text("\$ ${priceItem[index]}",
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                               ],

@@ -19,21 +19,21 @@ List<ProductModel> products = [
     id: 1,
     type: "Nike",
     description: "Zoom shoe",
-    price: 12.0,
+    price: 120.0,
     path: "assets/nike_1.png",
   ),
   ProductModel(
     id: 2,
     type: "Nike",
     description: "Human Race",
-    price: 20.0,
+    price: 201.0,
     path: "assets/nike_2.png",
   ),
   ProductModel(
     id: 3,
     type: "Adidas",
     description: "Joyraide",
-    price: 15.0,
+    price: 152.0,
     path: "assets/nike_3.png",
   ),
   ProductModel(
@@ -68,7 +68,7 @@ List<ProductModel> products = [
     id: 8,
     type: "Nike",
     description: "Race X10",
-    price: 120.0,
+    price: 127.0,
     path: "assets/nike_8.png",
   ),
   ProductModel(
